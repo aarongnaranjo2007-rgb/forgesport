@@ -28,8 +28,8 @@ if ! FORGESPORT_DOCS_RUNNING=1 python "$root/.githooks/document_commit.py" \
   exit 0
 fi
 
-git add docs/changelog.md 2>/dev/null
-git diff --cached --quiet -- docs/changelog.md && exit 0
+git add docs/changelog 2>/dev/null
+git diff --cached --quiet -- docs/changelog && exit 0
 
-git commit -q -m "docs: documentar $sha [skip docs]" -- docs/changelog.md || exit 0
+git commit -q -m "docs: documentar $sha [skip docs]" -- docs/changelog || exit 0
 git push -q origin HEAD 2>/dev/null || echo "docs: documentado en local, pero el push falló" >&2

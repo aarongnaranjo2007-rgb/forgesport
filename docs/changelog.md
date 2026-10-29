@@ -3,10 +3,10 @@ title: Changelog
 ---
 # Changelog
 
-## docs: explicar el hook de documentacion en el README (`b40b3a0`)
-- **Qué cambió:** Se añadió una sección de documentación al README explicando el funcionamiento del hook local con Git y Gemini para el changelog.
-- **Por qué:** no especificado
-- **Archivos:** README.md
-- **Impacto:** El usuario puede ver las instrucciones para configurar el hook local y la publicación en GitHub Pages; si se revierte, se pierde dicha información en la documentación.
+Una entrada por commit, agrupadas por año.
 
-Documentación generada por la IA a partir de cada commit.
+{% for page in site.pages %}
+{% if page.path contains 'changelog/' %}
+- [{{ page.title }}]({{ page.url | relative_url }})
+{% endif %}
+{% endfor %}
