@@ -1,8 +1,0 @@
-title: forgesport
-description: E-commerce full-stack de material deportivo para gimnasio y vóley
-theme: minima
-header_pages:
-  - docs/project-overview.md
-  - docs/scope.md
-  - docs/cart-strategy.md
-  - docs/changelog.md

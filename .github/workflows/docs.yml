@@ -5,9 +5,10 @@ on:
     branches: [main, develop]
     paths:
       - "docs/**"
-      - "README.md"
-      - "index.md"
-      - "_config.yml"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    paths:
+      - "docs/**"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -28,12 +29,12 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
-          destination: ./_site
+          source: ./docs
       - uses: actions/upload-pages-artifact@v3
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

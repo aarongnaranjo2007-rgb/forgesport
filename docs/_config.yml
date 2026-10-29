@@ -1,0 +1,11 @@
+title: forgesport
+description: E-commerce full-stack de material deportivo para gimnasio y vóley
+url: "https://aarongnaranjo2007-rgb.github.io"
+baseurl: "/forgesport"
+theme: minima
+header_pages:
+  - project-overview.md
+  - scope.md
+  - cart-strategy.md
+  - customer-flow.md
+  - changelog.md
