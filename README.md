@@ -3,7 +3,7 @@ E-commerce full-stack de material deportivo para gimnasio y vóley, creado con R
 
 ## Documentación
 
-Cada commit genera su entrada en `docs/changelog/` y, si toca código, actualiza el resto de documentos de `docs/` con un hook local (Git + Gemini). En un clon nuevo:
+Cada commit genera su entrada en `docs/changelog/` con un hook local (Git + Gemini). En un clon nuevo:
 
 ```
 git config core.hooksPath .githooks

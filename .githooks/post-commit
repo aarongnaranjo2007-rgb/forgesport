@@ -24,14 +24,7 @@ trap 'rm -f "$diff_file"' EXIT
 git show --format= --patch HEAD > "$diff_file"
 
 FORGESPORT_DOCS_RUNNING=1 python "$script" commit "$sha" "$(git log -1 --pretty=%s)" "$diff_file" \
-  || echo "docs: falló el changelog del commit $sha" >&2
-
-# Los documentos del proyecto solo se reescriben cuando el commit toca código.
-if git show --name-only --format= HEAD \
-  | grep -qvE '^(docs/|README\.md|index\.md|_config\.yml|\.gitignore|\.gitattributes|\.github/|\.githooks/)'; then
-  FORGESPORT_DOCS_RUNNING=1 python "$script" docs \
-    || echo "docs: falló la actualización de la documentación" >&2
-fi
+  || { echo "docs: la IA falló, commit sin documentar" >&2; exit 0; }
 
 git add docs 2>/dev/null
 git diff --cached --quiet -- docs && exit 0
