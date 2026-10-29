@@ -1,5 +1,5 @@
 #!/bin/sh
-# Documenta el commit recién creado con Gemini y sube ambos commits al remoto.
+# Documenta el commit con Gemini, actualiza docs/ y sube todo al remoto.
 # Requiere GEMINI_API_KEY (gratis en https://aistudio.google.com/apikey).
 # Activar una vez por clon: git config core.hooksPath .githooks
 set -u
@@ -17,19 +17,24 @@ if ! command -v python >/dev/null 2>&1; then
 fi
 
 root=$(git rev-parse --show-toplevel)
+script="$root/.githooks/document_commit.py"
 sha=$(git rev-parse --short HEAD)
 diff_file=$(mktemp)
 trap 'rm -f "$diff_file"' EXIT
 git show --format= --patch HEAD > "$diff_file"
 
-if ! FORGESPORT_DOCS_RUNNING=1 python "$root/.githooks/document_commit.py" \
-  "$sha" "$(git log -1 --pretty=%s)" "$diff_file"; then
-  echo "docs: la IA falló, commit sin documentar" >&2
-  exit 0
+FORGESPORT_DOCS_RUNNING=1 python "$script" commit "$sha" "$(git log -1 --pretty=%s)" "$diff_file" \
+  || echo "docs: falló el changelog del commit $sha" >&2
+
+# Los documentos del proyecto solo se reescriben cuando el commit toca código.
+if git show --name-only --format= HEAD \
+  | grep -qvE '^(docs/|README\.md|index\.md|_config\.yml|\.gitignore|\.gitattributes|\.github/|\.githooks/)'; then
+  FORGESPORT_DOCS_RUNNING=1 python "$script" docs \
+    || echo "docs: falló la actualización de la documentación" >&2
 fi
 
-git add docs/changelog 2>/dev/null
-git diff --cached --quiet -- docs/changelog && exit 0
+git add docs 2>/dev/null
+git diff --cached --quiet -- docs && exit 0
 
-git commit -q -m "docs: documentar $sha [skip docs]" -- docs/changelog || exit 0
+git commit -q -m "docs: documentar $sha [skip docs]" -- docs || exit 0
 git push -q origin HEAD 2>/dev/null || echo "docs: documentado en local, pero el push falló" >&2
