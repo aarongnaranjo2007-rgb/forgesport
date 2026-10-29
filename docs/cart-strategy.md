@@ -1,3 +1,6 @@
+---
+title: ForgeSport — Estrategia del carrito
+---
 # ForgeSport — Estrategia del carrito
 
 ## Comportamiento antes del login

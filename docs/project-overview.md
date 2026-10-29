@@ -1,3 +1,6 @@
+---
+title: ForgeSport — Visión general del proyecto
+---
 # ForgeSport — Visión general del proyecto
 
 ## Propósito

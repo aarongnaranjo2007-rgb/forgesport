@@ -1,0 +1,30 @@
+#!/bin/sh
+# Documenta el commit recién creado con OpenCode y sube ambos commits al remoto.
+# Activar una vez por clon: git config core.hooksPath .githooks
+set -u
+
+[ -n "${FORGESPORT_DOCS_RUNNING:-}" ] && exit 0
+case "$(git log -1 --pretty=%s)" in *"[skip docs]"*) exit 0 ;; esac
+
+if ! command -v opencode >/dev/null 2>&1; then
+  echo "docs: opencode no está en PATH, commit sin documentar" >&2
+  exit 0
+fi
+
+sha=$(git rev-parse --short HEAD)
+diff_file=$(mktemp)
+trap 'rm -f "$diff_file"' EXIT
+git show --format= --patch HEAD | head -c 60000 > "$diff_file"
+
+if ! FORGESPORT_DOCS_RUNNING=1 opencode run --standalone --agent docs --auto \
+  --file "$diff_file" \
+  "Documenta el commit $sha: $(git log -1 --pretty=%s)" >/dev/null 2>&1; then
+  echo "docs: la IA falló, commit sin documentar (usa 'git commit --amend' si lo necesitas)" >&2
+  exit 0
+fi
+
+git add docs/changelog.md 2>/dev/null
+git diff --cached --quiet -- docs/changelog.md && exit 0
+
+git commit -q -m "docs: documentar $sha [skip docs]" -- docs/changelog.md || exit 0
+git push -q origin HEAD 2>/dev/null || echo "docs: documentado en local, pero el push falló" >&2

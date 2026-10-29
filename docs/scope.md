@@ -1,3 +1,6 @@
+---
+title: ForgeSport — Alcance del MVP
+---
 # ForgeSport — Alcance del MVP
 
 ## Funcionalidades incluidas
