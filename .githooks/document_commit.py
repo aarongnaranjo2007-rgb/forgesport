@@ -29,7 +29,9 @@ def insert_section(md, section, heading):
     if i == -1:
         return md.rstrip() + "\n\n" + heading + "\n\n" + section + "\n"
     end = i + len(heading)
-    return md[:end] + "\n\n" + section + "\n\n" + md[end:].lstrip("\n")
+    rest = md[end:].strip("\n")
+    body = section + ("\n\n" + rest if rest else "")
+    return md[:end] + "\n\n" + body + "\n"
 
 
 def target(root):
